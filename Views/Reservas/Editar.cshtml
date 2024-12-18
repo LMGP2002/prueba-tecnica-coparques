@@ -1,0 +1,35 @@
+﻿@model SistemaGestionReservas.Models.Reserva
+
+<h2>Editar Reserva</h2>
+
+@using (Html.BeginForm("Editar", "Reservas", FormMethod.Post, new { @id = "form-editar-reserva" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label for="SalaID" class="form-label">Sala</label>
+        @Html.DropDownListFor(m => m.SalaID, new SelectList(ViewBag.Salas, "ID", "Nombre", Model.SalaID), "Seleccione una sala", new { @class = "form-select", @id = "SalaID" })
+    </div>
+    <div class="mb-3">
+        <label for="FechaReserva" class="form-label">Fecha de Reserva</label>
+        @Html.TextBoxFor(m => m.FechaReserva, new { type = "date", @class = "form-control", @id = "FechaReserva" })
+    </div>
+    <div class="mb-3">
+        <label for="Usuario" class="form-label">Usuario</label>
+        @Html.TextBoxFor(m => m.Usuario, new { @class = "form-control", @id = "Usuario" })
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+}
+
+<script>
+    document.getElementById("form-editar-reserva").addEventListener("submit", function(event) {
+        const sala = document.getElementById("SalaID").value;
+        const fecha = document.getElementById("FechaReserva").value;
+        const usuario = document.getElementById("Usuario").value;
+
+        if (!sala || !fecha || !usuario.trim()) {
+            event.preventDefault();
+            Swal.fire("Error", "Por favor complete todos los campos obligatorios.", "error");
+        }
+    });
+</script>

@@ -1,0 +1,78 @@
+@model IEnumerable<SistemaGestionReservas.Models.Sala>
+
+<h2>Gestión de Salas</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Capacidad</th>
+            <th>Disponibilidad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="tabla-salas">
+        @foreach (var sala in Model)
+        {
+            <tr id="fila-@sala.ID">
+                <td>@sala.Nombre</td>
+                <td>@sala.Capacidad</td>
+                <td>@(sala.Disponibilidad ? "Activa" : "Inactiva")</td>
+                <td>
+                    <a href="@Url.Action("Editar", "Salas", new { id = sala.ID })" class="btn btn-warning">Editar</a>
+                    <button class="btn btn-danger btn-eliminar" data-id="@sala.ID" data-nombre="@sala.Nombre">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="@Url.Action("Crear", "Salas")" class="btn btn-primary">Agregar Sala</a>
+
+<!-- Script para manejo de eliminación con fetch -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tablaSalas = document.getElementById("tabla-salas");
+
+        tablaSalas.addEventListener("click", async function (event) {
+            if (event.target.classList.contains("btn-eliminar")) {
+                const button = event.target;
+                const salaId = button.dataset.id;
+                const salaNombre = button.dataset.nombre;
+
+                // Confirmación con SweetAlert
+                const result = await Swal.fire({
+                    title: `¿Eliminar la sala "${salaNombre}"?`,
+                    text: "Esta acción no se puede deshacer.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar"
+                });
+
+                if (result.isConfirmed) {
+                    try {
+                        // Llamado al servidor
+                        const response = await fetch("@Url.Action("EliminarSalaJson", "Salas")", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ id: salaId }),
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            Swal.fire("¡Eliminada!", data.message, "success");
+                            document.getElementById(`fila-${salaId}`).remove();
+                        } else {
+                            Swal.fire("Error", data.message, "error");
+                        }
+                    } catch (error) {
+                        Swal.fire("Error", "Hubo un problema al procesar la solicitud.", "error");
+                    }
+                }
+            }
+        });
+    });
+</script>

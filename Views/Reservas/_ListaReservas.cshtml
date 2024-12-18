@@ -1,0 +1,25 @@
+﻿<table class="table">
+    <thead>
+        <tr>
+            <th>Sala</th>
+            <th>Fecha de Reserva</th>
+            <th>Usuario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reserva in Model)
+        {
+            <tr id="fila-@reserva.ID">
+                <td>@reserva.NombreSala</td>
+                <td>@reserva.FechaReserva.ToString("yyyy-MM-dd")</td>
+                <td>@reserva.Usuario</td>
+                <td>
+                    <a href="@Url.Action("Editar", "Reservas", new { id = reserva.ID })" class="btn btn-warning">Editar</a>
+                    <button class="btn btn-danger btn-eliminar" data-id="@reserva.ID" data-nombre="@reserva.NombreSala">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

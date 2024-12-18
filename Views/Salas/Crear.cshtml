@@ -1,0 +1,40 @@
+@model SistemaGestionReservas.Models.Sala
+
+<h2>Crear Sala</h2>
+
+@using (Html.BeginForm("Crear", "Salas", FormMethod.Post, new { @id = "form-crear-sala" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label for="Nombre" class="form-label">Nombre</label>
+        @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", @id = "Nombre" })
+    </div>
+    <div class="mb-3">
+        <label for="Capacidad" class="form-label">Capacidad</label>
+        @Html.TextBoxFor(m => m.Capacidad, new { @type = "number", @class = "form-control", @id = "Capacidad", @min = "1", @step = "1" })
+    </div>
+    <div class="mb-3">
+        <label for="Disponibilidad" class="form-label">Disponibilidad</label>
+        @Html.CheckBoxFor(m => m.Disponibilidad, new { @id = "Disponibilidad" })
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+}
+
+<script>
+    document.getElementById("form-crear-sala").addEventListener("submit", function (event) {
+        const nombre = document.getElementById("Nombre").value;
+        const capacidad = document.getElementById("Capacidad").value;
+
+        if (!nombre.trim()) {
+            event.preventDefault();
+            Swal.fire("Error", "Por favor complete el campo de nombre.", "error");
+            return;
+        }
+
+        if (!capacidad || isNaN(capacidad) || capacidad <= 0) {
+            event.preventDefault();
+            Swal.fire("Error", "Por favor ingrese un número válido para la capacidad.", "error");
+        }
+    });
+</script>

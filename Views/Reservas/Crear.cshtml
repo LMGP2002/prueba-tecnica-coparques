@@ -1,0 +1,50 @@
+﻿@model SistemaGestionReservas.Models.Reserva
+
+<div class="container mt-4">
+    <h2>Crear Reserva</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+        window.onload = function() {
+            Swal.fire({
+                icon: 'warning',
+                title: '¡Lo sentimos!',
+                text: '@Html.Raw(TempData["ErrorMessage"])',
+            });
+        };
+        </script>
+    }
+
+    @using (Html.BeginForm("Crear", "Reservas", FormMethod.Post, new { @id = "form-crear-reserva" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label for="SalaID" class="form-label">Sala</label>
+            @Html.DropDownListFor(m => m.SalaID, new SelectList(ViewBag.Salas, "ID", "Nombre"), "Seleccione una sala", new { @class = "form-select", @id = "SalaID" })
+        </div>
+        <div class="mb-3">
+            <label for="FechaReserva" class="form-label">Fecha de Reserva</label>
+            @Html.TextBoxFor(m => m.FechaReserva, new { type = "date", @class = "form-control", @id = "FechaReserva" })
+        </div>
+        <div class="mb-3">
+            <label for="Usuario" class="form-label">Usuario</label>
+            @Html.TextBoxFor(m => m.Usuario, new { @class = "form-control", @id = "Usuario" })
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    }
+</div>
+
+<script>
+    document.getElementById("form-crear-reserva").addEventListener("submit", function (event) {
+        const sala = document.getElementById("SalaID").value;
+        const fecha = document.getElementById("FechaReserva").value;
+        const usuario = document.getElementById("Usuario").value;
+
+        if (!sala || !fecha || !usuario.trim()) {
+            event.preventDefault();
+            Swal.fire("Error", "Por favor complete todos los campos obligatorios.", "error");
+        }
+    });
+</script>
