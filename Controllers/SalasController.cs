@@ -12,7 +12,6 @@ namespace SistemaGestionReservas.Controllers
 
         public SalasController()
         {
-            // Lee la cadena de conexión desde web.config
             _repositorio = new SalaRepositorio(
                 System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString
             );
@@ -22,18 +21,18 @@ namespace SistemaGestionReservas.Controllers
         public ActionResult Index()
         {
             // Obtener todas las salas para la vista index
-            var salas = _repositorio.ObtenerSalas();  // Sin filtro, obtiene todas las salas
+            var salas = _repositorio.ObtenerSalas(); 
             return View(salas);
         }
 
         // GET: Salas/Crear
         public ActionResult Crear()
         {
-            // Aquí pasamos '1' para obtener solo las salas activas
-            var salasActivas = _repositorio.ObtenerSalas(1);  // '1' representa salas activas
-            ViewBag.Salas = salasActivas;  // Pasamos las salas activas a la vista
 
-            return View();  // Retorna la vista de creación
+            var salasActivas = _repositorio.ObtenerSalas(1); 
+            ViewBag.Salas = salasActivas;  
+
+            return View(); 
         }
 
 
@@ -46,35 +45,35 @@ namespace SistemaGestionReservas.Controllers
         {
             if (ModelState.IsValid)
             {
-                _repositorio.AgregarSala(sala); // Llama al repositorio para agregar la sala
+                _repositorio.AgregarSala(sala); 
                 return RedirectToAction("Index");
             }
             return View(sala);
         }
 
-        // GET: Salas/Editar/5
+        // GET: Salas/Editar/
         public ActionResult Editar(int id)
         {
-            var sala = _repositorio.ObtenerSalas().FirstOrDefault(s => s.ID == id); // Busca la sala por ID
+            var sala = _repositorio.ObtenerSalas().FirstOrDefault(s => s.ID == id);
             if (sala == null)
                 return HttpNotFound();
             return View(sala);
         }
 
-        // POST: Salas/Editar/5
+        // POST: Salas/Editar/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Editar(Sala sala)
         {
             if (ModelState.IsValid)
             {
-                _repositorio.EditarSala(sala); // Llama al repositorio para editar la sala
+                _repositorio.EditarSala(sala); 
                 return RedirectToAction("Index");
             }
             return View(sala);
         }
 
-        // GET: Salas/Eliminar/5
+        // GET: Salas/Eliminar/
         public ActionResult Eliminar(int id)
         {
             var sala = _repositorio.ObtenerSalas().FirstOrDefault(s => s.ID == id);
@@ -83,16 +82,15 @@ namespace SistemaGestionReservas.Controllers
             return View(sala);
         }
 
-        // POST: Salas/Eliminar/5
+        // POST: Salas/Eliminar/
         [HttpPost, ActionName("Eliminar")]
         [ValidateAntiForgeryToken]
         public ActionResult EliminarConfirmado(int id)
         {
-            _repositorio.EliminarSala(id); // Llama al repositorio para eliminar la sala
+            _repositorio.EliminarSala(id); 
             return RedirectToAction("Index");
         }
 
-        // API: Salas/EliminarSalaJson (con respuesta JSON para eliminación dinámica)
         [HttpPost]
         public JsonResult EliminarSalaJson(int id)
         {

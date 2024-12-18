@@ -19,9 +19,9 @@ namespace SistemaGestionReservas.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var parameters = new { Estado = estado };  // Estado puede ser 0, 1 o NULL
+                var parameters = new { Estado = estado };  
                 var salas = connection.Query<Sala>(
-                    "spConsultarSalas",  // Procedimiento almacenado modificado
+                    "spConsultarSalas",  
                     parameters,
                     commandType: CommandType.StoredProcedure
                 );

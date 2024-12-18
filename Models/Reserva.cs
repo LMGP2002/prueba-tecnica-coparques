@@ -12,7 +12,7 @@ namespace SistemaGestionReservas.Models
         public DateTime FechaReserva { get; set; }
         public string Usuario { get; set; }
 
-        // Esta propiedad auxiliar permitirá recibir el nombre de la sala desde la base de datos
+        // Propiedad auxiliar que permitirá recibir el nombre de la sala desde la base de datos
         public string NombreSala { get; set; }
     }
 }

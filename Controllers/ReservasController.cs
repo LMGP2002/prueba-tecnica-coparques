@@ -51,7 +51,6 @@ namespace SistemaGestionReservas.Controllers
                 }
                 catch (SqlException ex)
                 {
-                    // Capturamos el código de error 50001 lanzado desde el procedimiento almacenado
                     if (ex.Number == 50001)
                     {
                         // Pasa el mensaje de error para mostrarlo en SweetAlert
@@ -67,18 +66,18 @@ namespace SistemaGestionReservas.Controllers
             return View(reserva);
         }
 
-        // GET: Reservas/Editar/5
+        // GET: Reservas/Editar/
         public ActionResult Editar(int id)
         {
             var reserva = _repositorioReserva.ObtenerReservas().FirstOrDefault(r => r.ID == id);
             if (reserva == null)
                 return HttpNotFound();
 
-            ViewBag.Salas = _repositorioSala.ObtenerSalas(1); // Solo salas activas
+            ViewBag.Salas = _repositorioSala.ObtenerSalas(1); 
             return View(reserva);
         }
 
-        // POST: Reservas/Editar/5
+        // POST: Reservas/Editar/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Editar(Reserva reserva)

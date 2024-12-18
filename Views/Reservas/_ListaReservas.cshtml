@@ -23,3 +23,54 @@
     </tbody>
 </table>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Capturar todos los botones de eliminación
+        document.querySelectorAll(".btn-eliminar").forEach(boton => {
+            boton.addEventListener("click", async function () {
+                const id = this.getAttribute("data-id");
+                const nombreSala = this.getAttribute("data-nombre");
+
+                // Confirmación antes de eliminar
+                const confirmacion = await Swal.fire({
+                    title: `¿Estás seguro de eliminar la reserva de "${nombreSala}"?`,
+                    text: "Esta acción no se puede deshacer.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar"
+                });
+
+                if (confirmacion.isConfirmed) {
+                    try {
+                        // Realizar la solicitud POST al servidor
+                        const response = await fetch(`@Url.Action("EliminarReservaJson", "Reservas")`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ id: parseInt(id) })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Notificar éxito
+                            Swal.fire("Éxito", result.message, "success");
+
+                            // Eliminar la fila de la tabla
+                            const fila = document.getElementById(`fila-${id}`);
+                            if (fila) fila.remove();
+                        } else {
+                            Swal.fire("Error", result.message, "error");
+                        }
+                    } catch (error) {
+                        Swal.fire("Error", "No se pudo eliminar la reserva. Inténtalo más tarde.", "error");
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+

@@ -20,7 +20,6 @@ namespace SistemaGestionReservas.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                // Ejecuta el procedimiento almacenado y mapea los resultados a la clase Reserva
                 var reservas = connection.Query<Reserva>(
                     "spConsultarReservas",
                     commandType: CommandType.StoredProcedure
